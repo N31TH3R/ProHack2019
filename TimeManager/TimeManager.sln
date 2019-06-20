@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
+# Blend for Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeManager", "TimeManager\TimeManager.csproj", "{C3E3C70C-727F-4792-B871-D63A16382EAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeManager", "TimeManager\TimeManager.csproj", "{C3E3C70C-727F-4792-B871-D63A16382EAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{76ED976A-0804-44E3-9ECE-7098ECF1B18D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C3E3C70C-727F-4792-B871-D63A16382EAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E3C70C-727F-4792-B871-D63A16382EAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3E3C70C-727F-4792-B871-D63A16382EAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76ED976A-0804-44E3-9ECE-7098ECF1B18D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76ED976A-0804-44E3-9ECE-7098ECF1B18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76ED976A-0804-44E3-9ECE-7098ECF1B18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76ED976A-0804-44E3-9ECE-7098ECF1B18D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
