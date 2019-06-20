@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Timers;
 using System.Windows;
@@ -19,9 +20,9 @@ namespace TimeManager
             InitializeComponent();
             List<WorkItem> workitems = new List<WorkItem>
             {
-                new WorkItem{Id = 44444, Title = "Kek"},
-                new WorkItem{Id = 65656, Title = "Lol"},
-                new WorkItem{Id = 567567567, Title = "jjjjjjjs"}
+                new WorkItem(1234, "Kek"),
+                new WorkItem(12345, "Kek"),
+                new WorkItem(123456, "Kek")
             };
 
             workItemsList.ItemsSource = workitems;
@@ -70,31 +71,30 @@ namespace TimeManager
 
     public class WorkItem : INotifyPropertyChanged
     {
-        private int _id;
-        private string _title;
+        public WorkItem(int id, string title)
+        {
+            Id = id;
+            Title = title;
+        }
+
         private TimeSpan _time;
 
-        public int Id
+        public int Id { get; }
+
+        public string Title { get; }
+
+        public string Time
         {
-            get => _id;
+            get => _time.ToString();
             set
             {
-                _id = value;
-                NotifyPropertyChanged();
+                if (TimeSpan.TryParseExact(value, "hh\\:mm\\:ss", CultureInfo.CurrentCulture.DateTimeFormat, out var parsedTime))
+                {
+                    _time = parsedTime;
+                    NotifyPropertyChanged();
+                }
             }
         }
-
-        public string Title
-        {
-            get => _title;
-            set
-            {
-                _title = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string Time => _time.ToString();
 
         public void AddTime(TimeSpan ts)
         {
