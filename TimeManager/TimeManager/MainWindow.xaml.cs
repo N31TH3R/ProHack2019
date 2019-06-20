@@ -45,6 +45,27 @@ namespace TimeManager
 
             timer.Start();
         }
+
+        private void OnPauseButtonClick(object sender, RoutedEventArgs e)
+        {
+            if ((string)pauseBtn.Content == "Pause")
+            {
+                pauseBtn.Content = "Resume";
+                timer.Stop();
+            }
+            else
+            {
+                pauseBtn.Content = "Pause";
+                timer.Start();
+            }
+        }
+
+        //private void OnUnPauseButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    unpauseBtn.Visibility = Visibility.Hidden;
+        //    pauseBtn.Visibility = Visibility.Visible;
+        //}
+
     }
 
     public class WorkItem : INotifyPropertyChanged

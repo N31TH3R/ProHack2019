@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid ShowGridLines="True">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -42,8 +42,8 @@
             </ListView.View>
         </ListView>
         <Button x:Name="saveBtn" Grid.Row="1" Grid.Column="1" Content="Save" Style="{DynamicResource  MaterialDesignFlatButton}"/>
-        <Button x:Name="pauseBtn" Grid.Row="1" Grid.Column="2" Content="Pause" Style="{DynamicResource  MaterialDesignFlatButton}"/>
-        <Button x:Name="unpauseBtn" Grid.Row="1" Grid.Column="2" Content="Unpause"  Visibility="Hidden" Style="{DynamicResource  MaterialDesignFlatButton}"/>
+        <Button x:Name="pauseBtn" Grid.Row="1" Grid.Column="2" Content="Pause" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnPauseButtonClick"/>
+        <!--<Button x:Name="unpauseBtn" Grid.Row="1" Grid.Column="2" Content="Unpause"  Visibility="Hidden" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnUnPauseButtonClick"/>-->
         <Button x:Name="resetBtn" Grid.Row="1" Grid.Column="0" Content="Reset" Style="{DynamicResource  MaterialDesignFlatButton}"/>
     </Grid>
 </Window>
