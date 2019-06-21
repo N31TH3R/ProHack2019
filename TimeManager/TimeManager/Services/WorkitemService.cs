@@ -73,6 +73,9 @@ namespace TimeManager.Services
                         }
                     });
                     requests.Add(await wiClient.UpdateWorkItemAsync(patchDocument, item.Id));
+
+                    item.trackerWorkitem.Fields["Microsoft.VSTS.Scheduling.RemainingWork"] = remaining - item.hours;
+                    item.trackerWorkitem.Fields["Microsoft.VSTS.Scheduling.CompletedWork"] = completed + item.hours;
                 }
             });
             return requests;
