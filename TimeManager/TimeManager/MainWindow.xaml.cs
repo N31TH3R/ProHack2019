@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -7,13 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TimeManager.Services;
 
 namespace TimeManager
@@ -46,7 +38,7 @@ namespace TimeManager
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
         {
-            var x = new WorkitemService().PatchItems(workItemsList.ItemsSource.OfType<WorkItem>().ToList()).Result;
+            new WorkitemService().PatchItems(workItemsList.ItemsSource.OfType<WorkItem>().ToList()).Wait();
             foreach (WorkItem item in workItemsList.ItemsSource)
                 item.ResetTime();
 

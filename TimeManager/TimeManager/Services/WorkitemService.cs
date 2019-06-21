@@ -48,10 +48,12 @@ namespace TimeManager.Services
         }
 
         // Patch changed items
-        public async Task<List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>> PatchItems(List<WorkItem> items)
+        public Task PatchItems(List<WorkItem> items)
         {
-            var requests = new List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>();
-            items.ForEach(async item =>
+            var requests = new List<Task<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>>();
+
+
+            items.ForEach(item =>
             {
                 if (item.hours > 0)
                 {
@@ -72,13 +74,13 @@ namespace TimeManager.Services
                             Value = completed + item.hours
                         }
                     });
-                    requests.Add(await wiClient.UpdateWorkItemAsync(patchDocument, item.Id));
+                    requests.Add(wiClient.UpdateWorkItemAsync(patchDocument, item.Id));
 
                     item.trackerWorkitem.Fields["Microsoft.VSTS.Scheduling.RemainingWork"] = remaining - item.hours;
                     item.trackerWorkitem.Fields["Microsoft.VSTS.Scheduling.CompletedWork"] = completed + item.hours;
                 }
             });
-            return requests;
+            return Task.WhenAll(requests);
         }
     }
 }
