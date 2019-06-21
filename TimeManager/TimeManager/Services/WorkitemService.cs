@@ -15,16 +15,18 @@ using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using Microsoft.VisualStudio.Services.WebApi.Patch;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Principal;
 
 namespace TimeManager.Services
 {
     public class WorkitemService
     {
-        public NetworkCredential credentials { get; set; } = new NetworkCredential("nabadani", "ikk)KKM3LT", "admsk");
-
+        public NetworkCredential credentials { get; set; }
         private HttpClient httpClient => new HttpClient(new HttpClientHandler() { Credentials = credentials });
         private WorkItemTrackingHttpClient wiClient => new VssConnection(new Uri(ConfigurationManager.AppSettings.Get("tfsApiEndpoint")), new VssClientCredentials(new WindowsCredential(credentials))).GetClient<WorkItemTrackingHttpClient>();
-        public WorkitemService() {}
+        public WorkitemService() {
+            credentials = new NetworkCredential(ConfigurationManager.AppSettings.Get("domain"), ConfigurationManager.AppSettings.Get("userName"), ConfigurationManager.AppSettings.Get("pass"));
+        }
 
         // Get items list
         public List<WorkItem> GetItems()
@@ -35,22 +37,21 @@ namespace TimeManager.Services
                 "WHERE [Work Item Type] In ('Task','Bug') " +
                 "AND [State] = 'Active'" +
                 "AND [Assigned To] = @Me" };
-            List<string> queryResults = wiClient.QueryByWiqlAsync(query).Result.WorkItems.Select(wi => wi.Url).ToList();
-
-            var requests = new List<Task<HttpResponseMessage>>();
-            queryResults.ForEach(item => requests.Add(httpClient.GetAsync(item)));
-            Task.WaitAll(requests.ToArray());
-            var responses = requests.Select(r => JsonConvert.DeserializeObject<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>(r.Result.Content.ReadAsStringAsync().Result));
-
-            var result = responses.Select(r => new WorkItem(r)).ToList();
-            return result;
+            //List<string> queryResults = wiClient.QueryByWiqlAsync(query).Result.WorkItems.Select(wi => wi.Url).ToList();
+            List<int> queryResults = wiClient.QueryByWiqlAsync(query).Result.WorkItems.Select(wi => wi.Id).ToList();
+            //var requests = new List<Task<HttpResponseMessage>>();
+            //queryResults.ForEach(item => requests.Add(httpClient.GetAsync(item)));
+            //Task.WaitAll(requests.ToArray());
+            //var responses = requests.Select(r => JsonConvert.DeserializeObject<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>(r.Result.Content.ReadAsStringAsync().Result));
+            var responses = queryResults.AsParallel().Select(id => new WorkItem(wiClient.GetWorkItemAsync(id).Result)).ToList();
+            return responses;
         }
 
         // Patch changed items
-        public void PatchItems(List<WorkItem> items)
+        public async Task<List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>> PatchItems(List<WorkItem> items)
         {
-            var requests = new List<Task<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>>();
-            items.ForEach(item =>
+            var requests = new List<Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem>();
+            items.ForEach(async item =>
             {
                 if (item.hours > 0)
                 {
@@ -71,10 +72,10 @@ namespace TimeManager.Services
                             Value = completed + item.hours
                         }
                     });
-                    requests.Add(wiClient.UpdateWorkItemAsync(patchDocument, item.Id));
+                    requests.Add(await wiClient.UpdateWorkItemAsync(patchDocument, item.Id));
                 }
             });
-            Task.WaitAll(requests.ToArray());
+            return requests;
         }
     }
 }
