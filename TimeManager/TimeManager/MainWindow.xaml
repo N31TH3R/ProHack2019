@@ -7,6 +7,9 @@
         xmlns:local="clr-namespace:TimeManager"
         mc:Ignorable="d"
         Title="TimeManager" Height="300" Width="800">
+    <Window.DataContext>
+        <local:WindowViewModel/>
+    </Window.DataContext>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,6 +27,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition Height="0.15*" />
             <RowDefinition Height="0.15*" />
         </Grid.RowDefinitions>
         <DataGrid AutoGenerateColumns="False" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 20 20 20" Name="workItemsList" ItemsSource="{DynamicResource ResourceKey=WorkItem}" Style="{DynamicResource MaterialDesignDataGrid}">
@@ -47,8 +51,9 @@
                 <DataGridTextColumn Header="Time" Binding="{Binding Path=Time}" />
             </DataGrid.Columns>
         </DataGrid>
-
-        <Button x:Name="saveBtn" Grid.Row="1" Grid.Column="1" Content="Save" Style="{DynamicResource  MaterialDesignFlatButton}"/>
-        <Button x:Name="resetBtn" Grid.Row="1" Grid.Column="0" Content="Reset" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnResetClick"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Total:</TextBlock>
+        <TextBlock Name="totalCounter" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="20 0 0 0" Text="{Binding Total}" />
+        <Button x:Name="saveBtn" Grid.Row="2" Grid.Column="1" Content="Save" Style="{DynamicResource  MaterialDesignFlatButton}"/>
+        <Button x:Name="resetBtn" Grid.Row="2" Grid.Column="0" Content="Reset" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnResetClick"/>
     </Grid>
 </Window>
