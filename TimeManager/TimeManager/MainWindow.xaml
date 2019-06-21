@@ -48,12 +48,12 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"  IsReadOnly="True" />
                 <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}"  IsReadOnly="True" />
-                <DataGridTextColumn Header="Time" Binding="{Binding Path=Time}" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Path=Time}"/>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Total:</TextBlock>
         <TextBlock Name="totalCounter" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="20 0 0 0" Text="{Binding Total}" />
-        <Button x:Name="saveBtn" Grid.Row="2" Grid.Column="1" Content="Save" Style="{DynamicResource  MaterialDesignFlatButton}"/>
+        <Button x:Name="saveBtn" Grid.Row="2" Grid.Column="1" Content="Save" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnSaveClick"/>
         <Button x:Name="resetBtn" Grid.Row="2" Grid.Column="0" Content="Reset" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnResetClick"/>
     </Grid>
 </Window>

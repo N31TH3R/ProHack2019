@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
@@ -25,27 +26,32 @@ namespace TimeManager
         public MainWindow()
         {
             InitializeComponent();
-            List<WorkItem> workitems = new List<WorkItem>
-            {
-                new WorkItem(1234, "Kek"),
-                new WorkItem(12345, "Kek2"),
-                new WorkItem(123456, "Kek3")
-            };
-
-            //workItemsList.ItemsSource = workitems;
-            var x = new WorkitemService().GetItems();
+            workItemsList.ItemsSource = new WorkitemService().GetItems();
         }
 
         private void OnResetClick(object sender, RoutedEventArgs e)
         {
             foreach (WorkItem item in workItemsList.ItemsSource)
                 item.ResetTime();
+
+            var context = (WindowViewModel)DataContext;
+            context.Total = TimeSpan.Zero;
         }
 
         private void OnStopClick(object sender, RoutedEventArgs e)
         {
             var context = (WindowViewModel)DataContext;
             context.StopTimer();
+        }
+
+        private void OnSaveClick(object sender, RoutedEventArgs e)
+        {
+            var x = new WorkitemService().PatchItems(workItemsList.ItemsSource.OfType<WorkItem>().ToList()).Result;
+            foreach (WorkItem item in workItemsList.ItemsSource)
+                item.ResetTime();
+
+            var context = (WindowViewModel)DataContext;
+            context.Total = TimeSpan.Zero;
         }
 
         private void OnStartClick(object sender, RoutedEventArgs e)
