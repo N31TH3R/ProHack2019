@@ -7,6 +7,14 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using TimeManager.Services;
 
 namespace TimeManager
 {
@@ -28,7 +36,8 @@ namespace TimeManager
                 new WorkItem(123456, "Kek3")
             };
 
-            workItemsList.ItemsSource = workitems;
+            //workItemsList.ItemsSource = workitems;
+            var x = new WorkitemService().GetItems();
         }
 
         private void OnResetClick(object sender, RoutedEventArgs e)
@@ -70,6 +79,15 @@ namespace TimeManager
             Title = title;
         }
 
+        public WorkItem(Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem workitem)
+        {
+            trackerWorkitem = workitem;
+            Id = workitem.Id ?? 0;
+            Title = workitem.Fields["System.Title"]?.ToString();
+        }
+
+        public Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem trackerWorkitem { get; private set; }
+
         private TimeSpan _time;
         private bool _isRunning;
 
@@ -87,6 +105,7 @@ namespace TimeManager
             }
 
         }
+        public float hours => (float)_time.Hours + ((float)(100 * _time.Minutes / 60) / 100);
 
         public string Time
         {

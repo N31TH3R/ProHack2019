@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.143.1" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="16.143.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="16.143.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Services.InteractiveClient" Version="16.143.1" />
     <PackageReference Include="MaterialDesignThemes" Version="2.5.1" />
   </ItemGroup>
 
