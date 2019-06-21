@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TimeManager.Services;
 
 namespace TimeManager
 {
@@ -23,6 +24,7 @@ namespace TimeManager
         public MainWindow()
         {
             InitializeComponent();
+            new WorkitemService().GetItems();
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
