@@ -26,7 +26,6 @@ namespace TimeManager
         public MainWindow()
         {
             InitializeComponent();
-            new WorkitemService().GetItems();
             List<WorkItem> workitems = new List<WorkItem>
             {
                 new WorkItem(1234, "Kek"),
@@ -34,7 +33,8 @@ namespace TimeManager
                 new WorkItem(123456, "Kek")
             };
 
-            workItemsList.ItemsSource = workitems;
+            //workItemsList.ItemsSource = workitems;
+            var x = new WorkitemService().GetItems();
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
@@ -86,11 +86,22 @@ namespace TimeManager
             Title = title;
         }
 
+        public WorkItem(Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem workitem)
+        {
+            trackerWorkitem = workitem;
+            Id = workitem.Id ?? 0;
+            Title = workitem.Fields["System.Title"]?.ToString();
+        }
+
+        public Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.WorkItem trackerWorkitem { get; private set; }
+
         private TimeSpan _time;
 
         public int Id { get; }
 
         public string Title { get; }
+
+        public float hours => (float)_time.Hours + ((float)(100 * _time.Minutes / 60) / 100);
 
         public string Time
         {
