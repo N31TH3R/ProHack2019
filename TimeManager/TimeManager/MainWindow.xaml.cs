@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Timers;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace TimeManager
 {
@@ -15,57 +16,49 @@ namespace TimeManager
     public partial class MainWindow : Window
     {
         private Timer timer;
+        private WorkItem _active;
+
         public MainWindow()
         {
             InitializeComponent();
             List<WorkItem> workitems = new List<WorkItem>
             {
                 new WorkItem(1234, "Kek"),
-                new WorkItem(12345, "Kek"),
-                new WorkItem(123456, "Kek")
+                new WorkItem(12345, "Kek2"),
+                new WorkItem(123456, "Kek3")
             };
 
             workItemsList.ItemsSource = workitems;
         }
 
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        private void OnResetClick(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            foreach (WorkItem item in workItemsList.ItemsSource)
+                item.ResetTime();
         }
 
-        private void OnButtonClick(object sender, RoutedEventArgs e)
+        private void OnStopClick(object sender, RoutedEventArgs e)
         {
-            if (timer != null)
-                timer.Close();
-            timer = new Timer(1000);
-            timer.Elapsed += (x, y) =>
-            {
-                this.Dispatcher.Invoke(() =>
-                ((WorkItem)((Button)sender).DataContext).AddTime(TimeSpan.FromMilliseconds(1000)));
-            };
-
-            timer.Start();
+            var btn = (ToggleButton)sender;
+            var temp = (WorkItem)btn.DataContext;
+            timer.Dispose();
+            timer = null;
+            _active = null;
         }
 
-        private void OnPauseButtonClick(object sender, RoutedEventArgs e)
+        private void OnStartClick(object sender, RoutedEventArgs e)
         {
-            if ((string)pauseBtn.Content == "Pause")
-            {
-                pauseBtn.Content = "Resume";
-                timer.Stop();
-            }
-            else
-            {
-                pauseBtn.Content = "Pause";
-                timer.Start();
-            }
-        }
+            var btn = (ToggleButton)sender;
+            var temp = (WorkItem)btn.DataContext;
 
-        //private void OnUnPauseButtonClick(object sender, RoutedEventArgs e)
-        //{
-        //    unpauseBtn.Visibility = Visibility.Hidden;
-        //    pauseBtn.Visibility = Visibility.Visible;
-        //}
+            if (_active != null && temp != _active)
+                _active.IsRunning = false;
+
+            _active = temp;
+
+            if (timer == null)
+                timer = new Timer(_ => Dispatcher.Invoke(() => _active.AddTime(TimeSpan.FromSeconds(1))), null, 0, 1000);
+        }
 
     }
 
@@ -78,10 +71,22 @@ namespace TimeManager
         }
 
         private TimeSpan _time;
+        private bool _isRunning;
 
         public int Id { get; }
 
         public string Title { get; }
+
+        public bool IsRunning
+        {
+            get => _isRunning;
+            set
+            {
+                _isRunning = value;
+                NotifyPropertyChanged();
+            }
+
+        }
 
         public string Time
         {
@@ -99,6 +104,12 @@ namespace TimeManager
         public void AddTime(TimeSpan ts)
         {
             _time = _time.Add(ts);
+            NotifyPropertyChanged("Time");
+        }
+
+        public void ResetTime()
+        {
+            _time = TimeSpan.Zero;
             NotifyPropertyChanged("Time");
         }
 

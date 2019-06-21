@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-         xmlns:local="clr-namespace:TimeManager"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:TimeManager"
         mc:Ignorable="d"
         Title="TimeManager" Height="300" Width="800">
     <Window.Resources>
@@ -21,31 +21,34 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="0.15*" />
         </Grid.RowDefinitions>
-        <!--<ListView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="20 20 20 20" Name="workItemsList" ItemsSource="{DynamicResource ResourceKey=WorkItem}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Id}" >Id</GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Title}" >Name</GridViewColumn>
-                    <GridViewColumn>Time
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Name="timeButton" Click="OnButtonClick" Content="{Binding Path=Time}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView> 
-            </ListView.View>
-        </ListView>-->
-        <DataGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="20 20 20 20" Name="workItemsList" ItemsSource="{DynamicResource ResourceKey=WorkItem}" Style="{DynamicResource MaterialDesignDataGrid}"/>
+        <DataGrid AutoGenerateColumns="False" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 20 20 20" Name="workItemsList" ItemsSource="{DynamicResource ResourceKey=WorkItem}" Style="{DynamicResource MaterialDesignDataGrid}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ToggleButton Style="{StaticResource MaterialDesignActionToggleButton}" IsChecked="{Binding IsRunning, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="OnStartClick" Unchecked="OnStopClick">
+                                <ToggleButton.Content>
+                                    <materialDesign:PackIcon Kind="Play" />
+                                </ToggleButton.Content>
+                                <materialDesign:ToggleButtonAssist.OnContent>
+                                    <materialDesign:PackIcon Kind="Stop" />
+                                </materialDesign:ToggleButtonAssist.OnContent>
+                            </ToggleButton>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Id" Binding="{Binding Path=Id}"  IsReadOnly="True" />
+                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}"  IsReadOnly="True" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Path=Time}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
         <Button x:Name="saveBtn" Grid.Row="1" Grid.Column="1" Content="Save" Style="{DynamicResource  MaterialDesignFlatButton}"/>
-        <Button x:Name="pauseBtn" Grid.Row="1" Grid.Column="2" Content="Pause" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnPauseButtonClick"/>
-        <!--<Button x:Name="unpauseBtn" Grid.Row="1" Grid.Column="2" Content="Unpause"  Visibility="Hidden" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnUnPauseButtonClick"/>-->
-        <Button x:Name="resetBtn" Grid.Row="1" Grid.Column="0" Content="Reset" Style="{DynamicResource  MaterialDesignFlatButton}"/>
+        <Button x:Name="resetBtn" Grid.Row="1" Grid.Column="0" Content="Reset" Style="{DynamicResource  MaterialDesignFlatButton}" Click="OnResetClick"/>
     </Grid>
 </Window>
