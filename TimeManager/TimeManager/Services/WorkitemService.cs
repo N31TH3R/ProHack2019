@@ -25,7 +25,7 @@ namespace TimeManager.Services
         private HttpClient httpClient => new HttpClient(new HttpClientHandler() { Credentials = credentials });
         private WorkItemTrackingHttpClient wiClient => new VssConnection(new Uri(ConfigurationManager.AppSettings.Get("tfsApiEndpoint")), new VssClientCredentials(new WindowsCredential(credentials))).GetClient<WorkItemTrackingHttpClient>();
         public WorkitemService() {
-            credentials = new NetworkCredential(ConfigurationManager.AppSettings.Get("domain"), ConfigurationManager.AppSettings.Get("userName"), ConfigurationManager.AppSettings.Get("pass"));
+            credentials = new NetworkCredential(ConfigurationManager.AppSettings.Get("userName"), ConfigurationManager.AppSettings.Get("pass"), ConfigurationManager.AppSettings.Get("domain"));
         }
 
         // Get items list
